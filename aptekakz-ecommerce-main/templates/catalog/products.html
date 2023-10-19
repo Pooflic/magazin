@@ -1,0 +1,113 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}Тауарлар{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="block">
+    <div class="navigator mb-3">
+        <div class="container">
+            <p><a href="{% url "catalog:homePage" %}" style="text-decoration: none;">Главная</a>/<a href="{% url "catalog:store_home" %}">Продуктс</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <h1 class="mb-3">Вещи</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Поиск</h3>
+                        <form action="" class="mb-3">
+                            <div class="row">
+                                <div class="col-md-10 col-7">
+                                    <input type="search" name="search" class="form-control input" placeholder="Найти" id="inputDefault">
+                                </div>
+                                <div class="col-md-2 col-5">
+                                    <button class="btn btn-primary"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <h3 class="card-title">Фильтр</h3>
+                        <div class="filter">
+                            <a href="{% url "catalog:store_home" %}">Все вещи</a>
+                            {% for category in categories %}
+                            <a href="{{ category.get_absolute_url }}">
+                                <div class="badge text-neutral-content badge-outline mb-2 btn btn-primary">{{ category.name }}</div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            {% for product in products %}
+                            <div class="col-md-6 mb-2">
+                                <div class="card min-heaght-50">
+                                    <img class="card-img-top align-self-center" src="{{ product.image.url }}" style="height: 300px; object-fit: cover;" alt="{{ product.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <p class="card-text"><b>Категория:</b><span class="badge bg-primary">{{ product.category }}</span></p>
+                                        <p class="card-text"><b>Цена:</b> {{ product.price }} теңге &#8376;</p>
+                                        <label for="select-qty-{{product.id}}" style="font-size: 20px; font-weight: 700;">Количество</label>
+                                        <select id="select-qty-{{product.id}}" class="select select-primary w-100 mb-2">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <button onclick="addToCart('{{product.id}}')" class="btn btn-primary">
+                                            <i class="fa-solid fa-cart-shopping"></i>
+                                        </button>
+                                        <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Смотреть</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% else %}
+<div class="container mx-auto">
+    <div class="alert alert-error shadow-lg">
+  <div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <span>Кажется вы не зарегистрованны, пожалуйста, выйдите от сюда</span>
+  </div>
+</div>
+</div>
+{% endif %}
+<script>
+    const addToCart = (productId) => {
+        let selectQuantity = document.getElementById('select-qty-' + productId);
+        let quantity = selectQuantity.value;
+
+        let data = {
+            product_id: productId,
+            quantity
+        }
+
+        fetch("{% url 'orders:cart_add' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {  "Content-type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": "{{csrf_token}}"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("cart-qty").innerHTML = data.total_items;
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>MY magazine</title>
+</head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+          <a class="navbar-brand" href="#">Aliexpress</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="./index.html">Главная</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./catalog.html">Каталог</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./login.html">Вход</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./sign-up.html">Регистрация</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./cart.html">Корзина (1)</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">user</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">Панель админа</a>
+                  <a class="dropdown-item" href="#">Выход</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </header>
+    <div class="block">
+        <div class="navigator mb-3">
+            <div class="container">
+                <p><a href="./index.html" style="text-decoration: none;">Главная</a>/Каталог</p>
+            </div>
+        </div>
+        <div class="container">
+            <h1 class="mb-3">Вещи</h1>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Поиск</h3>
+                            <form action="" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-10 col-7">
+                                        <input type="text" class="form-control" placeholder="Default input" id="inputDefault">
+                                    </div>
+                                    <div class="col-md-2 col-5">
+                                        <button class="btn btn-primary"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                            <h3 class="card-title">Фильтр</h3>
+                            <div class="filter">
+                                <a href="#">Все вещи</a>
+                                <a href="#">categoryName</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="card min-max-heigt-card">
+                                        <img class="card-img-top align-self-center" src="./images/perch-dragon.png" alt="Card image cap">
+                                        <div class="card-body">
+                                          <h5 class="card-title">productName</h5>
+                                          <p class="card-text"><b>Категория:</b><span class="badge bg-primary">categoryName</span></p>
+                                          <p class="card-text"><b>Цена:</b> 8990 &#8376;</p>
+                                          <a href="#" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i></a>
+                                          <a href="./product-detail.html" class="btn btn-primary">Смотреть</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

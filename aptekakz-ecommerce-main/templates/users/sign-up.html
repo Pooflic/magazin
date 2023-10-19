@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+{% load static %}
+{% load tailwind_filters %}
+{% block title %}Тіркелу{% endblock %}
+
+{% block content %}
+<style>
+    #hint_id_username, #hint_id_password1, #hint_id_password2 {
+        display: none;
+    }
+</style>
+<div class="block">
+    <div class="navigator mb-3">
+        <div class="container">
+            <p><a href="{% url "catalog:homePage" %}" style="text-decoration: none;">Главная</a>/Регистрация</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-5" style="font-size: 32px;">Регистрация</h2>
+                <form method="post">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                    <p class="mb-5">Если у вас уже есть аккаунт, вы сможете войти <a href="{% url "users:loginPage" %}" class="link link-primary">тут</a></p>
+                  <button class="btn btn-primary">Тіркелу</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

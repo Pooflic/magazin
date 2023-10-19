@@ -1,0 +1,83 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}Тауарлар{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="block">
+        <div class="navigator mb-3">
+            <div class="container">
+                <p><a href="#" class="text-decoration-none">Главная</a> / <a href="{% url "catalog:store_home" %}" class="text-decoration-none">Назад в магаз</a> / {{ product.name }} </p>
+            </div>
+        </div>
+
+        <div class="container">
+            <h1 class="mb-4">Детали</h1>
+            <div class="row">
+                <div class="card col-md-10">
+                    <div class="card-body">
+                        <figure><img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-100" /></figure>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>{{ product.category }}</h3>
+                            <img src="{{ product.img }}" alt="">
+                            <h3>Цена: <span class="badge text-primary">{{ product.price }} &#8376;</span></h3>
+                            <p style="font-size: 20px; text-align: justify;">Описание: {{ product.description }}</p>
+                            <div class="marking">
+                                {% if product.in_stock %}
+                                <span class="badge rounded-pill bg-success" style="font-size: 15px;">Есть в наличии</span>
+                                {% else %}
+                                <span class="badge rounded-pill bg-danger" style="font-size: 15px;">Нет в наличии</span>
+                                {% endif %}
+                            </div>
+                            <label for="select-qty-{{product.id}}">Количество</label>
+                            <select id="select-qty-{{product.id}}" class="form-select mb-3">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <button onclick="addToCart('{{product.id}}')" class="btn btn-dark violet_btn">Добавить в корзину <i class="fa-solid fa-cart-shopping"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="container mx-auto">
+    <div class="alert alert-error shadow-lg">
+  <div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <span>Что вы тут забыли, немедленно войдите в свой аккаунт!</span>
+  </div>
+</div>
+</div>
+{% endif %}
+<script>
+    const addToCart = (productId) => {
+        let selectQuantity = document.getElementById('select-qty-' + productId);
+        let quantity = selectQuantity.value;
+
+        let data = {
+            product_id: productId,
+            quantity
+        }
+
+        fetch("{% url 'orders:cart_add' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {  "Content-type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": "{{csrf_token}}"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("cart-qty").innerHTML = data.total_items;
+        });
+    }
+</script>
+{% endblock %}

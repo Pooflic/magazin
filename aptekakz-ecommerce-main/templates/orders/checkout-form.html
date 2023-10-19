@@ -1,0 +1,58 @@
+<div id="order" class="card w-100 mb-10 shadow-xl">
+    <div class="card-body">
+        <form>
+            <h1 class="mb-10" style="font-size: 30px; font-weight: 700; color: #545454;">Информация о клиенте</h1>
+            <div class="form-control">
+                <label for="fullname" style="color: #545454;">Полное имя: </label>
+                <input type="text" class="form-control input input-bordered" id="fullname" placeholder="Имя">
+            </div>
+            <div class="form-control">
+                <label for="email" style="color: #545454;">Электронная почта: </label>
+                <input type="email" class="form-control input input-bordered" id="email" placeholder="name@gmail.com">
+            </div>
+            <div class="form-control">
+                <label for="city" style="color: #545454;">Город:</label>
+                <input type="text" class="form-control input input-bordered" id="city" placeholder="Китай">
+            </div>
+            <div class="form-control">
+                <label for="address" style="color: #545454;">Адрес:</label>
+                <input type="text" class="form-control input input-bordered" id="address" placeholder="Адрес">
+            </div>
+            <div class="form-control">
+                <label for="phone" style="color: #545454;">Телефон:</label>
+                <input type="text" class="form-control input input-bordered" id="phone" placeholder="Телефон" maxlength="10">
+            </div>
+            <button class="btn btn-primary btn-active mt-5" onclick="processOrder()">Оформить</button>
+        </form>
+    </div>
+</div>
+<script>
+    const processOrder = () => {
+
+        let full_name = document.getElementById('fullname').value;
+        let email = document.getElementById('email').value;
+        let city = document.getElementById('city').value;
+        let address = document.getElementById('address').value;
+        let phone = document.getElementById('phone').value;
+
+        let data = {
+            full_name: full_name,
+            email: email,
+            city: city,
+            address: address,
+            phone: phone,
+        }
+        fetch("{% url 'orders:process_order' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {  "Content-type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": "{{csrf_token}}"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert('Сіздің тапсырыңыз өңделуде. Тапсырысты растау барысында жақын уақытта менеджер Сізге хабарласады.');
+            window.location.href = "{% url 'catalog:homePage' %}"
+        });
+    }
+
+</script>

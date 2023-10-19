@@ -1,0 +1,86 @@
+{% extends "../base.html" %}
+{% block title %}Себет{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="block">
+  <div class="navigator mb-3">
+      <div class="container">
+          <p><a href="{% url "catalog:homePage" %}" class="text-decoration-none">Главная</a> / Корзина </p>
+      </div>
+  </div>
+
+  <div class="container">
+      <h1>Корзина</h1>
+      {% if cart|length == 0 %}
+        <div class="mt-5 mb-5 alert alert-warning shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>У вас в корзине пусто</span>
+          </div>
+        </div>
+      {% else %}
+      <table class="table">
+          <thead>
+            <tr>
+              <th colspan="2">Товар</th>
+              <th>Количество</th>
+              <th>Цена</th>
+              <th>Итого</th>
+              <th>Удалить</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart %}
+              <tr id="tr-{{item.product.id}}">
+                  <td><img src="{{item.product.image.url}}" width="72px" alt="{{item.product.name}}"></td>
+                  <td>{{item.product.name}}</td>
+                  <td>{{item.qty}}</td>
+                  <td>{{item.product.price}} теңге</td>
+                  <td>{{item.subtotal}} теңге</td>
+                  <td><button class="btn btn-error btn-outline w-100" onclick="deleteFromCart('{{item.product.id}}')"><i class="fa-solid fa-trash"></i></button></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      <h3>В итоге: <span class="badge text-black">{{ cart.get_total }} &#8376;</span></h3>
+      <form action="">
+          <button class="btn btn-primary mb-2">Купить</button>
+      </form>
+      {% include './checkout-form.html' %}
+      {% endif %}
+    {% else %}
+    <div class="container mx-auto">
+        <div class="alert alert-error shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>Сначала войдите в аккаунт</span>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+    
+<script>
+    const deleteFromCart = (productId) => {
+        let data = {
+            product_id: productId
+        }
+
+        fetch("{% url 'orders:cart_delete' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {  "Content-type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": "{{csrf_token}}"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("cart-qty").innerHTML = data.total_items;            
+            document.getElementById('tr-'+productId).remove();            
+        });
+    }
+</script>
+
+{% endblock %}

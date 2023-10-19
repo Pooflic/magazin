@@ -1,0 +1,26 @@
+{% extends "../base.html" %}
+{% load static %}
+{% load tailwind_filters %}
+{% block title %}Кіру{% endblock %}
+
+{% block content %}
+<div id="block">
+  <div class="navigator mb-3">
+    <div class="container">
+      <p><a href="#" class="text-decoration-none">Главная</a> / Войти</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h1>Авторизация</h1>
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+            <p class="mb-5">Если у вас нет аккаунта, вы можете зарегистрироваться <a href="{% url "users:signUp" %}" class="link link-primary">тут</a></p>
+            <button class="btn btn-primary">Войти</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

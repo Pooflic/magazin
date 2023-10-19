@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="kz" data-theme="corporate">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="{% static './images/logo-ali.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static './new-style/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static './new-style/css/style.css' %}">
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  <header class="navbar navbar-expand-lg bg-primary" >
+    <div class="container">
+      <a class="navbar-brand" href="#">Aliexpress</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "catalog:homePage" %}">Главная</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "catalog:store_home" %}">Каталог</a>
+          </li>
+          {% if not user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "users:loginPage" %}">Вход</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "users:signUp" %}">Регистрация</a>
+            </li>
+          {% endif %}
+            {% if user.is_authenticated %}
+              {% with cart_items=cart|length %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'orders:cart_summary' %}"><i class="fa-solid fa-cart-plus"></i> {{ cart_items }}</a>
+              </li>
+              {% endwith %}
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                  <a class="nav-link active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src="{% static './images/logo.png' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                      {{user.username}}
+                  </a>
+                  <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'orders:cart_summary' %}">Перейти</a></li>
+                  {% if user.is_superuser %}
+                  <li><a class="dropdown-item" href="{% url 'admin:index' %}">Админ панель</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  {% endif %}
+                  <li class="purple_btn"><button type="button dropdown-item" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">Профиль</button></li>
+                  <li class="exit_btn"><a class="dropdown-item white_color" href="{% url 'users:logoutUser' %}">Выход</a></li>
+                  </ul>
+              </li>
+              {% endif %}
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+</header>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel"><img src="{% static './new-style/images/logo.png' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            {{user.username}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="h4">{{user.first_name}}</div>
+            <div class="h4">{{user.last_name}}</div>
+            <div class="h4">{{user.email}}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <a href="{% url 'orders:cart_summary' %}" class="btn btn-primary">Моя корзина</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% block content %}
+    {% endblock %}
+    <script src="{% static './new-style/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+         const addToCart = (productId) => {
+        let selectQuantity = document.getElementById('select-qty-' + productId);
+        let quantity = selectQuantity.value;
+
+        console.log("Se está seleccionando el producto: " + productId + " para añadirlo al carrito con: " + quantity + " unid.");
+
+        let data = {
+            product_id: productId,
+            quantity
+        }
+
+        fetch("{% url 'orders:cart_add' %}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {  "Content-type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": "{{csrf_token}}"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("cart-qty").innerHTML = data.total_items;
+        });
+    }
+
+    </script>
+</body>
+</html>

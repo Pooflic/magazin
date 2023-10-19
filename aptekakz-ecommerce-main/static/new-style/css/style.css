@@ -1,0 +1,29 @@
+.main {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.anim-img {
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.anim-img:hover {
+    transform: scale(1.04);
+
+}
+
+.navigator {
+    padding: 10px 0;
+    background-color: aliceblue;
+}
+
+.navigator p {
+    margin: 0;
+}
+
+.filter a {
+    text-decoration: none;
+    display: block;
+}
